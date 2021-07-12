@@ -18,8 +18,7 @@ var userName = document.getElementById("username")
     }else if(name.value.length == 0 && pw.value.length == 0){
         alert('Please fill in email and password');
 
-    }else if(pw.value.length > 8){
-        alert('Password should be Max of 8');
+  
 
     }else if(!pw.value.match(numbers)){
         alert('please add 1 number');
