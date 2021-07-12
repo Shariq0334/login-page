@@ -14,10 +14,10 @@ var userName = document.getElementById("username")
         alert('Please fill in email');
 
     }else if(pw.value.length == 0 || pw.value.length < 5 ){
-        alert('Please fill in Correct  password');
+        alert('Password minimum leght will be 6 with 1 Uppercase letter and 1 number aatleast');
 
     }else if(name.value.length == 0 && pw.value.length == 0){
-        alert('Password Min lenght will be 6');
+        alert('Password And Username Min lenght will be 6');
 
   
 
@@ -33,8 +33,8 @@ var userName = document.getElementById("username")
     }else if (!name.value.match(email_validator_regex)){
         alert("Please fill Correct Email")
     }
-    else if (!userName.value >= 5  ){
-alert ("Please fil At least 6 letters in UserName")
+    else if (userName.value.length < 5  ){
+alert ("Please fill At least 6 letters in UserName ")
     }
     else{
         localStorage.setItem('userName',userName.value)
