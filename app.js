@@ -3,6 +3,7 @@ function store(){
 var userName = document.getElementById("username")
     var name = document.getElementById('email');
     var pw = document.getElementById('password');
+    var email_validator_regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     var lowerCaseLetters = /[a-z]/g;
     var upperCaseLetters = /[A-Z]/g;
     var numbers = /[0-9]/g;
@@ -12,11 +13,11 @@ var userName = document.getElementById("username")
     if(name.value.length == 0){
         alert('Please fill in email');
 
-    }else if(pw.value.length == 0){
-        alert('Please fill in password');
+    }else if(pw.value.length == 0 || pw.value.length < 5 ){
+        alert('Please fill in Correct  password');
 
     }else if(name.value.length == 0 && pw.value.length == 0){
-        alert('Please fill in email and password');
+        alert('Password Min lenght will be 6');
 
   
 
@@ -29,7 +30,13 @@ var userName = document.getElementById("username")
     }else if(!pw.value.match(lowerCaseLetters)){
         alert('please add 1 lovercase letter');
 
-    }else{
+    }else if (!name.value.match(email_validator_regex)){
+        alert("Please fill Correct Email")
+    }
+    else if (!userName.value >= 5  ){
+alert ("Please fil At least 6 letters in UserName")
+    }
+    else{
         localStorage.setItem('userName',userName.value)
         localStorage.setItem('name', name.value);
         localStorage.setItem('pw', pw.value);
