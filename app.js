@@ -1,68 +1,63 @@
-// var users = {
-//     userA: {
-//         name: 'usernameA',
-//         pw: 'passwordA'
-//     },
-//     userB: {
-//         name: 'usernameB',
-//         pw: 'passwordB'
-//     }
-// };
-
+let allUsers ;
+let savedUsers = localStorage.getItem("allUsers")
+if (savedUsers){
+    allUsers = JSON.parse(savedUsers)
+}else {
+    allUsers=[]
+}
 function store(){
 
 var userName = document.getElementById("username").value
     var name = document.getElementById('email').value;
     var pw = document.getElementById('password').value;
     var email_validator_regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    var lowerCaseLetters = /[a-z]/g;
-    var upperCaseLetters = /[A-Z]/g;
-    var numbers = /[0-9]/g;
-    let stored_users = JSON.parse(localStorage.getItem('users'));
-    
-    
-
-    if(pw.length ==0 || name.length == 0){
-   alert("Please Fill")
-       
-
-
-    }else if(pw.length == 0 || pw.length < 5 ){
-        alert('Password minimum leght will be 6 with 1 Uppercase letter and 1 number aatleast');
-
-    }else if(name.length == 0 && pw.length == 0){
-        alert('Password And Username Min lenght will be 6');
-
-  
-
-    }else if(!pw.match(numbers)){
-        alert('please add 1 number');
-
-    }else if(!pw.match(upperCaseLetters)){
-        alert('please add 1 uppercase letter');
-
-    }else if(!pw.match(lowerCaseLetters)){
-        alert('please add 1 lovercase letter');
-
-    }else if (!name.match(email_validator_regex)){
-        alert("Please fill Correct Email")
+    var nameMatch = /^[a-zA-Z]+/g;
+    var passMatch =/^[A-Za-z]\w{7,14}$/g;
+    let user = {
+        userName: userName,
+        email:name,
+        password:pw
     }
-    else if (stored_users ){
-        localStorage.setItem('userName',userName.value)
-        localStorage.setItem('name', name.value);
-        localStorage.setItem('pw', pw.value);
-        stored_users.push({name: name, password: pw,user_Name: userName});
-        localStorage.setItem('users', JSON.stringify(stored_users));
-        alert('Your account has been created');
-        window.location.href = "login.html"
+    
+    
+
+    if(!userName.match(nameMatch) || userName.length < 6 ){
+   alert("Please fill correct Username minimum 6 leteters long")}
+       
+   else if(!name.match(email_validator_regex)){
+        alert('Please fill Correct Email');
+
+    }else if(!pw.match(passMatch)){
+        alert('Password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter');
     }
     else{
-        localStorage.setItem('users', JSON.stringify([{name: name, password: pw,user_Name: userName}]));
+        var flag = false
+        // localStorage.setItem('users', JSON.stringify([{name: name, password: pw,user_Name: userName}]));
+        for(i=0 ; i<allUsers.length; i++ ){
+            if(allUsers[i].email === name){
+                flag = true
+                
+            }
+        }
+        if(flag){
+            alert("This email is already registered")
+        }else{
+        allUsers.push(user)
+    localStorage.setItem("allUsers",JSON.stringify(allUsers))
         alert('Your account has been created');
         window.location.href = "login.html"
+        console.log(allUsers[0].email)
         // document.getElementById("signup-form").style.display ="none"
         // document.getElementById("logindiv").style.display = "block"
+        }
     }
+
+
+   
+    
+   
+    
+    
 
     
 }
@@ -75,25 +70,28 @@ function check(){
 
     var userName = document.getElementById('emailcheck').value;
     var userPw = document.getElementById('passwordcheck').value;
-    var userRemember = document.getElementById("rememberMe");
-    let stored_users = JSON.parse(localStorage.getItem('users'))
+    let stored_users = JSON.parse(localStorage.getItem('allUsers'))
 
-
-    if(stored_users){
+let flag= false
         for (let u = 0; u < stored_users.length; u++){
-            if(userName == stored_users[u].name && userPw == stored_users[u].password){
+        if(userName == stored_users[u].email && userPw == stored_users[u].password){
                 localStorage.setItem("userKey", u);
-                alert('You are logged in.');
-                window.location.href = "home1.html"
-            }
+                flag = true
         }
+        }    
+         
+         if(flag){
+            alert('You are logged in.');
+            window.location.href = "home1.html"
+         }else{
+             alert("Please Sign Up First")
+         }
     }
-else{
-        localStorage.setItem('users', '[]');
-    }
-    return alert('Access denied. Valid username and password is required.');
+
+
+    // return alert('Access denied. Valid username and password is required.');
     
-}
+
 function back (){
     window.location.href = "index.html"
 }
@@ -102,23 +100,36 @@ var pageURL = window.location.toString();
 var pageName = pageURL.slice(pageURL.lastIndexOf("/"));
 console.log(pageName)
 if(pageName === "/home1.html"){
-let stored_users = JSON.parse(localStorage.getItem('users'))
-console.log(stored_users[0].name)
+let stored_users = JSON.parse(localStorage.getItem('allUsers'))
+console.log(stored_users[0].userName)
 var welcome = document.getElementById("ac")
 var welcomEmail = document.getElementById("ad")
 var userKey = localStorage.getItem("userKey");
-welcome.innerText= `Name:  ${stored_users[userKey].user_Name} `
-welcomEmail.innerText = `Email : ${stored_users[userKey].name}`
+welcome.innerText= `Name:  ${stored_users[userKey].userName} `
+welcomEmail.innerText = `Email : ${stored_users[userKey].email}`
 }
 function logOut (){
     window.location.href = "login.html" 
 }
 
 
-function deleteAccount(){
-    let stored_users = JSON.parse(localStorage.getItem('users'))
-    stored_users.splice(userKey, 1);
-    localStorage.setItem("stored_users", JSON.stringify(stored_users));
-    window.location.href = "index.html"
-}
 
+function deleteAccount(){
+    let stored_users = JSON.parse(localStorage.getItem('allUsers'))
+    var toDelete = confirm("Are you sure?");
+    if (toDelete) {
+     stored_users.splice(userKey, 1);
+     localStorage.setItem("stored_users", JSON.stringify(stored_users));
+      window.location.replace("index.html");
+    }else{
+        alert("not deleted")
+    }
+   
+
+//    let show = localStorage.removeItem(stored_users[userKey])
+//    console.log(show)
+//    console.log(stored_users.splice(userKey, 1));
+    //localStorage.setItem("stored_users", JSON.stringify(stored_users));
+    // window.location.href = "index.html"
+
+}
